@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="bg">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SIGNATURE STUDIO</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@200;400;600&display=swap');
+        body { margin: 0; font-family: 'Montserrat', sans-serif; background: #fff; }
+        
+        /* Изчистен хедър */
+        header { display: flex; justify-content: space-between; align-items: center; padding: 15px 5%; border-bottom: 1px solid #eee; position: sticky; top: 0; background: #fff; z-index: 100; }
+        .logo h1 { margin: 0; font-size: 18px; letter-spacing: 5px; text-transform: uppercase; font-weight: 600; }
+        
+        /* Банер без картинки (само цвят и текст) */
+        .hero { background: #f4f1eb; margin: 15px 5%; padding: 80px 20px; border-radius: 12px; text-align: center; }
+        .hero h2 { font-size: 38px; letter-spacing: 12px; font-weight: 200; margin: 0; text-transform: uppercase; }
+        .hero p { font-size: 10px; letter-spacing: 4px; color: #888; margin-top: 20px; text-transform: uppercase; }
+
+        /* Продукти */
+        .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; padding: 20px 5%; }
+        .item { text-align: center; }
+        .box { width: 100%; aspect-ratio: 1; background: #f9f9f9; border-radius: 8px; display: flex; align-items: center; justify-content: center; color: #ccc; font-size: 11px; border: 1px solid #f0f0f0; }
+        .item h3 { font-size: 11px; margin: 15px 0; letter-spacing: 1px; text-transform: uppercase; }
+
+        /* Важната инфо лента */
+        .info-bar { background: #000; color: #fff; padding: 35px 20px; text-align: center; font-size: 10px; letter-spacing: 2px; line-height: 2.5; text-transform: uppercase; }
+
+        footer { padding: 30px; text-align: center; font-size: 9px; color: #bbb; }
+    </style>
+</head>
+<body>
+
+    <header>
+        <div style="font-size: 20px;">☰</div>
+        <div class="logo"><h1>SIGNATURE</h1></div>
+        <div style="font-size: 20px;">🛒</div>
+    </header>
+
+    <section class="hero">
+        <h2>НОВАТА ЕРА</h2>
+        <p>Signature Studio &copy; 2026</p>
+    </section>
+
+    <div class="grid">
+        <div class="item"><div class="box">ТЕНИСКИ</div><h3>Abstract Line</h3></div>
+        <div class="item"><div class="box">СУИТШЪРТИ</div><h3>Essential Hoodie</h3></div>
+    </div>
+
+    <section class="info-bar">
+        ИЗРАБОТКА ПО ПОРЪЧКА<br>
+        ДОСТАВКА: 5-10 РАБОТНИ ДНИ<br>
+        ПРЕМИУМ КАЧЕСТВО
+    </section>
+
+    <footer>&copy; SIGNATURE STUDIO</footer>
+
+</body>
+</html>
