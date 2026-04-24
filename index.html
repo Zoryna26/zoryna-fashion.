@@ -1,0 +1,588 @@
+<!DOCTYPE html>
+<html lang="bg">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ZORYNA FASHION | Изкуството на модерната елегантност</title>
+    
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500&family=Lato:wght@300;400;700&display=swap" rel="stylesheet">
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- GSAP for Animations -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
+    
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        gold: '#D4AF37',
+                        'gold-light': '#F4E4BC',
+                        'gold-dark': '#AA8C2C',
+                        'soft-gray': '#F9F9F9',
+                        'text-dark': '#1A1A1A',
+                        'text-muted': '#888888',
+                    },
+                    fontFamily: {
+                        serif: ['"Playfair Display"', 'serif'],
+                        sans: ['"Lato"', 'sans-serif'],
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        body {
+            font-family: 'Lato', sans-serif;
+            background-color: #FFFFFF;
+            color: #1A1A1A;
+            overflow-x: hidden;
+        }
+        
+        h1, h2, h3, h4, h5, h6 {
+            font-family: 'Playfair Display', serif;
+        }
+
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #f1f1f1;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #D4AF37;
+            border-radius: 4px;
+        }
+
+        /* Hero Slider Animation */
+        .slide {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            opacity: 0;
+            transition: opacity 1.5s ease-in-out, transform 6s ease-out;
+            transform: scale(1.1);
+            z-index: 0;
+        }
+        .slide.active {
+            opacity: 1;
+            transform: scale(1);
+            z-index: 1;
+        }
+
+        /* Quick View Button Animation */
+        .product-card .quick-view-btn {
+            opacity: 0;
+            transform: translateY(20px);
+            transition: all 0.4s cubic-bezier(0.165, 0.84, 0.44, 1);
+        }
+        .product-card:hover .quick-view-btn {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        
+        .product-card:hover img {
+            transform: scale(1.05);
+        }
+
+        /* Gold Underline Animation */
+        .nav-link {
+            position: relative;
+        }
+        .nav-link::after {
+            content: '';
+            position: absolute;
+            width: 0;
+            height: 1px;
+            bottom: -4px;
+            left: 50%;
+            background-color: #D4AF37;
+            transition: all 0.3s ease;
+            transform: translateX(-50%);
+        }
+        .nav-link:hover::after {
+            width: 100%;
+        }
+
+        /* Loader */
+        #loader {
+            position: fixed;
+            inset: 0;
+            background: #fff;
+            z-index: 9999;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            transition: opacity 0.8s ease;
+        }
+    </style>
+</head>
+<body class="antialiased">
+
+    <!-- Loader -->
+    <div id="loader">
+        <div class="text-center">
+            <h1 class="text-4xl md:text-6xl font-serif tracking-[0.3em] text-black animate-pulse">ZORYNA</h1>
+            <p class="text-xs tracking-[0.5em] text-gold mt-2 uppercase">Fashion House</p>
+        </div>
+    </div>
+
+    <!-- Navigation -->
+    <header id="navbar" class="fixed w-full top-0 z-50 transition-all duration-500 bg-white/90 backdrop-blur-md border-b border-transparent">
+        <div class="max-w-7xl mx-auto px-6 py-6 flex justify-between items-center">
+            <!-- Mobile Menu Button -->
+            <button class="md:hidden text-black hover:text-gold transition-colors" onclick="toggleMobileMenu()">
+                <i data-lucide="menu" class="w-6 h-6"></i>
+            </button>
+
+            <!-- Links Left -->
+            <nav class="hidden md:flex space-x-12">
+                <a href="#collections" class="nav-link text-sm uppercase tracking-widest hover:text-gold transition-colors">Колекции</a>
+                <a href="#atelier" class="nav-link text-sm uppercase tracking-widest hover:text-gold transition-colors">Ателието</a>
+            </nav>
+
+            <!-- Logo Center -->
+            <div class="absolute left-1/2 transform -translate-x-1/2 text-center cursor-pointer" onclick="window.scrollTo({top: 0, behavior: 'smooth'})">
+                <h1 class="text-2xl md:text-3xl font-serif tracking-[0.2em] font-bold leading-none">ZORYNA</h1>
+                <span class="text-[0.6rem] tracking-[0.4em] text-gold uppercase block mt-1">Fashion</span>
+            </div>
+
+            <!-- Links Right -->
+            <nav class="hidden md:flex space-x-12 items-center">
+                <a href="#contact" class="nav-link text-sm uppercase tracking-widest hover:text-gold transition-colors">Контакти</a>
+                <div class="flex space-x-6">
+                    <button class="hover:text-gold transition-colors relative group">
+                        <i data-lucide="search" class="w-5 h-5"></i>
+                    </button>
+                    <button class="hover:text-gold transition-colors relative group">
+                        <i data-lucide="shopping-bag" class="w-5 h-5"></i>
+                        <span class="absolute -top-2 -right-2 bg-gold text-white text-[10px] w-4 h-4 flex items-center justify-center rounded-full opacity-0 group-hover:opacity-100 transition-opacity">0</span>
+                    </button>
+                </div>
+            </nav>
+        </div>
+        
+        <!-- Mobile Menu Overlay -->
+        <div id="mobile-menu" class="fixed inset-0 bg-white z-40 transform -translate-x-full transition-transform duration-500 md:hidden flex flex-col justify-center items-center space-y-8">
+            <button class="absolute top-6 right-6 text-black" onclick="toggleMobileMenu()">
+                <i data-lucide="x" class="w-8 h-8"></i>
+            </button>
+            <a href="#collections" onclick="toggleMobileMenu()" class="text-2xl font-serif hover:text-gold">Колекции</a>
+            <a href="#atelier" onclick="toggleMobileMenu()" class="text-2xl font-serif hover:text-gold">Ателието</a>
+            <a href="#contact" onclick="toggleMobileMenu()" class="text-2xl font-serif hover:text-gold">Контакти</a>
+        </div>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="relative h-screen w-full overflow-hidden bg-gray-50">
+        <!-- Slides -->
+        <div id="hero-slider" class="absolute inset-0 w-full h-full">
+            <!-- Slide 1 -->
+            <div class="slide active bg-cover bg-center" style="background-image: url('https://images.unsplash.com/photo-1539008835657-9e8e9680c956?q=80&w=2574&auto=format&fit=crop');">
+                <div class="absolute inset-0 bg-white/10"></div>
+            </div>
+            <!-- Slide 2 -->
+            <div class="slide bg-cover bg-center" style="background-image: url('https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?q=80&w=2020&auto=format&fit=crop');">
+                <div class="absolute inset-0 bg-white/10"></div>
+            </div>
+            <!-- Slide 3 -->
+            <div class="slide bg-cover bg-center" style="background-image: url('https://images.unsplash.com/photo-1490481651871-ab68de25d43d?q=80&w=2070&auto=format&fit=crop');">
+                <div class="absolute inset-0 bg-white/10"></div>
+            </div>
+        </div>
+
+        <!-- Hero Content -->
+        <div class="relative z-10 h-full flex flex-col justify-center items-center text-center px-4">
+            <p class="text-sm md:text-base uppercase tracking-[0.4em] text-gray-600 mb-6 opacity-0 translate-y-4 animate-fade-in-up" style="animation-delay: 0.5s; animation-fill-mode: forwards;">
+                Пролет / Лято 2026
+            </p>
+            <h2 class="text-5xl md:text-7xl lg:text-8xl font-serif font-medium text-black mb-8 leading-tight opacity-0 translate-y-4 animate-fade-in-up" style="animation-delay: 0.8s; animation-fill-mode: forwards;">
+                Изкуството на<br><span class="italic text-gold">модерната елегантност</span>
+            </h2>
+            <div class="opacity-0 translate-y-4 animate-fade-in-up" style="animation-delay: 1.2s; animation-fill-mode: forwards;">
+                <a href="#collections" class="inline-block border border-black px-10 py-4 text-sm uppercase tracking-widest hover:bg-black hover:text-white transition-all duration-300">
+                    Разгледай Колекцията
+                </a>
+            </div>
+        </div>
+
+        <!-- Slider Indicators -->
+        <div class="absolute bottom-10 left-1/2 transform -translate-x-1/2 flex space-x-4 z-20">
+            <button onclick="changeSlide(0)" class="w-12 h-[2px] bg-black transition-all duration-300 opacity-100 slide-indicator"></button>
+            <button onclick="changeSlide(1)" class="w-12 h-[2px] bg-gray-400 transition-all duration-300 opacity-50 slide-indicator"></button>
+            <button onclick="changeSlide(2)" class="w-12 h-[2px] bg-gray-400 transition-all duration-300 opacity-50 slide-indicator"></button>
+        </div>
+    </section>
+
+    <!-- Featured Collection -->
+    <section id="collections" class="py-24 md:py-32 bg-white">
+        <div class="max-w-7xl mx-auto px-6">
+            <div class="text-center mb-20">
+                <span class="text-gold text-xs font-bold tracking-[0.3em] uppercase block mb-4">Нова Колекция</span>
+                <h2 class="text-4xl md:text-5xl font-serif text-black mb-6">Вечерна Елегантност</h2>
+                <div class="w-16 h-[1px] bg-black mx-auto"></div>
+            </div>
+
+            <!-- Grid -->
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 md:gap-12">
+                
+                <!-- Product 1 -->
+                <div class="product-card group cursor-pointer">
+                    <div class="relative overflow-hidden bg-gray-100 aspect-[3/4] mb-6">
+                        <img src="https://images.unsplash.com/photo-1595777457583-95e059d581b8?q=80&w=1983&auto=format&fit=crop" alt="Dress" class="w-full h-full object-cover transition-transform duration-700 ease-out">
+                        <div class="absolute inset-0 bg-black/0 group-hover:bg-black/10 transition-colors duration-500"></div>
+                        <button class="quick-view-btn absolute bottom-8 left-1/2 transform -translate-x-1/2 bg-white text-black px-8 py-3 text-xs uppercase tracking-widest hover:bg-gold hover:text-white transition-colors shadow-lg">
+                            Бърз преглед
+                        </button>
+                    </div>
+                    <div class="text-center">
+                        <h3 class="font-serif text-xl text-black mb-1">Копринена Рокля "Аврора"</h3>
+                        <p class="text-gray-500 text-sm mb-2">Черно / Златно</p>
+                        <p class="text-gold font-medium">2,450 лв.</p>
+                    </div>
+                </div>
+
+                <!-- Product 2 -->
+                <div class="product-card group cursor-pointer">
+                    <div class="relative overflow-hidden bg-gray-100 aspect-[3/4] mb-6">
+                        <img src="https://images.unsplash.com/photo-1585487000160-6ebcfceb0d03?q=80&w=2034&auto=format&fit=crop" alt="Suit" class="w-full h-full object-cover transition-transform duration-700 ease-out">
+                        <div class="absolute inset-0 bg-black/0 group-hover:bg-black/10 transition-colors duration-500"></div>
+                        <button class="quick-view-btn absolute bottom-8 left-1/2 transform -translate-x-1/2 bg-white text-black px-8 py-3 text-xs uppercase tracking-widest hover:bg-gold hover:text-white transition-colors shadow-lg">
+                            Бърз преглед
+                        </button>
+                    </div>
+                    <div class="text-center">
+                        <h3 class="font-serif text-xl text-black mb-1">Велурен Блейзър</h3>
+                        <p class="text-gray-500 text-sm mb-2">Тъмно Синьо</p>
+                        <p class="text-gold font-medium">1,890 лв.</p>
+                    </div>
+                </div>
+
+                <!-- Product 3 -->
+                <div class="product-card group cursor-pointer">
+                    <div class="relative overflow-hidden bg-gray-100 aspect-[3/4] mb-6">
+                        <img src="https://images.unsplash.com/photo-1594633313593-bab3825d0caf?q=80&w=1974&auto=format&fit=crop" alt="Gown" class="w-full h-full object-cover transition-transform duration-700 ease-out">
+                        <div class="absolute inset-0 bg-black/0 group-hover:bg-black/10 transition-colors duration-500"></div>
+                        <button class="quick-view-btn absolute bottom-8 left-1/2 transform -translate-x-1/2 bg-white text-black px-8 py-3 text-xs uppercase tracking-widest hover:bg-gold hover:text-white transition-colors shadow-lg">
+                            Бърз преглед
+                        </button>
+                    </div>
+                    <div class="text-center">
+                        <h3 class="font-serif text-xl text-black mb-1">Бална Рокля "София"</h3>
+                        <p class="text-gray-500 text-sm mb-2">Шампанско</p>
+                        <p class="text-gold font-medium">3,200 лв.</p>
+                    </div>
+                </div>
+
+                <!-- Product 4 -->
+                <div class="product-card group cursor-pointer">
+                    <div class="relative overflow-hidden bg-gray-100 aspect-[3/4] mb-6">
+                        <img src="https://images.unsplash.com/photo-1550614000-4b9519e020c9?q=80&w=1974&auto=format&fit=crop" alt="Accessories" class="w-full h-full object-cover transition-transform duration-700 ease-out">
+                        <div class="absolute inset-0 bg-black/0 group-hover:bg-black/10 transition-colors duration-500"></div>
+                        <button class="quick-view-btn absolute bottom-8 left-1/2 transform -translate-x-1/2 bg-white text-black px-8 py-3 text-xs uppercase tracking-widest hover:bg-gold hover:text-white transition-colors shadow-lg">
+                            Бърз преглед
+                        </button>
+                    </div>
+                    <div class="text-center">
+                        <h3 class="font-serif text-xl text-black mb-1">Кожена Чанта "Злата"</h3>
+                        <p class="text-gray-500 text-sm mb-2">Кремава</p>
+                        <p class="text-gold font-medium">1,150 лв.</p>
+                    </div>
+                </div>
+
+                 <!-- Product 5 -->
+                 <div class="product-card group cursor-pointer">
+                    <div class="relative overflow-hidden bg-gray-100 aspect-[3/4] mb-6">
+                        <img src="https://images.unsplash.com/photo-1552374196-1ab2a1c593e8?q=80&w=1974&auto=format&fit=crop" alt="Men" class="w-full h-full object-cover transition-transform duration-700 ease-out">
+                        <div class="absolute inset-0 bg-black/0 group-hover:bg-black/10 transition-colors duration-500"></div>
+                        <button class="quick-view-btn absolute bottom-8 left-1/2 transform -translate-x-1/2 bg-white text-black px-8 py-3 text-xs uppercase tracking-widest hover:bg-gold hover:text-white transition-colors shadow-lg">
+                            Бърз преглед
+                        </button>
+                    </div>
+                    <div class="text-center">
+                        <h3 class="font-serif text-xl text-black mb-1">Вечерен Костюм</h3>
+                        <p class="text-gray-500 text-sm mb-2">Черен</p>
+                        <p class="text-gold font-medium">2,800 лв.</p>
+                    </div>
+                </div>
+
+                 <!-- Product 6 -->
+                 <div class="product-card group cursor-pointer">
+                    <div class="relative overflow-hidden bg-gray-100 aspect-[3/4] mb-6">
+                        <img src="https://images.unsplash.com/photo-1605763240004-7e93b172d754?q=80&w=1974&auto=format&fit=crop" alt="Jewelry" class="w-full h-full object-cover transition-transform duration-700 ease-out">
+                        <div class="absolute inset-0 bg-black/0 group-hover:bg-black/10 transition-colors duration-500"></div>
+                        <button class="quick-view-btn absolute bottom-8 left-1/2 transform -translate-x-1/2 bg-white text-black px-8 py-3 text-xs uppercase tracking-widest hover:bg-gold hover:text-white transition-colors shadow-lg">
+                            Бърз преглед
+                        </button>
+                    </div>
+                    <div class="text-center">
+                        <h3 class="font-serif text-xl text-black mb-1">Златни Обеци</h3>
+                        <p class="text-gray-500 text-sm mb-2">18к Злато</p>
+                        <p class="text-gold font-medium">980 лв.</p>
+                    </div>
+                </div>
+
+            </div>
+            
+            <div class="text-center mt-16">
+                <a href="#" class="inline-block text-xs uppercase tracking-[0.2em] border-b border-black pb-1 hover:text-gold hover:border-gold transition-all">Вижте цялата колекция</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- About Designer (Split Screen) -->
+    <section id="atelier" class="bg-soft-gray">
+        <div class="flex flex-col lg:flex-row h-auto lg:h-[800px]">
+            <!-- Image Side -->
+            <div class="w-full lg:w-1/2 h-[500px] lg:h-full relative overflow-hidden group">
+                <img src="https://images.unsplash.com/photo-1558171813-4c088753af8f?q=80&w=1974&auto=format&fit=crop" alt="Designer" class="w-full h-full object-cover transition-transform duration-[2s] group-hover:scale-105">
+                <div class="absolute inset-0 bg-black/10"></div>
+            </div>
+
+            <!-- Text Side -->
+            <div class="w-full lg:w-1/2 flex items-center justify-center p-12 lg:p-24 bg-white">
+                <div class="max-w-lg">
+                    <span class="text-gold text-xs font-bold tracking-[0.3em] uppercase block mb-6">За Дизайнера</span>
+                    <h2 class="text-4xl md:text-5xl font-serif text-black mb-8 leading-tight">Душата на<br><span class="italic">Zoryna Fashion</span></h2>
+                    <p class="text-gray-600 leading-relaxed mb-6 font-light">
+                        Всяка творба на Zoryna Fashion е ода за женствеността и силата. Вдъхновена от архитектурата на старите европейски столици и модерната урбанистична естетика, дизайнерът създава не просто дрехи, а изкуство, което обгръща тялото.
+                    </p>
+                    <p class="text-gray-600 leading-relaxed mb-10 font-light">
+                        Ателието ни в София е място, където традицията среща иновацията. Използваме само най-фините италиански коприни и френски дантели, за да създадем уникални модели, които подчертават индивидуалността на всяка дама.
+                    </p>
+                    
+                    <div class="flex items-center space-x-4">
+                        <img src="https://randomuser.me/api/portraits/women/44.jpg" alt="Signature" class="w-16 h-16 rounded-full object-cover grayscale">
+                        <div>
+                            <p class="font-serif text-lg text-black">Елена Зорина</p>
+                            <p class="text-xs text-gray-500 uppercase tracking-widest">Главен Дизайнер</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Contact / CTA -->
+    <section id="contact" class="py-24 bg-black text-white text-center">
+        <div class="max-w-3xl mx-auto px-6">
+            <h2 class="text-3xl md:text-5xl font-serif mb-6">Персонализирана Консултация</h2>
+            <p class="text-gray-400 font-light mb-10">Запазете час за частна консултация в нашето ателие и създайте своя уникален тоалет заедно с нашия екип.</p>
+            <a href="mailto:atelier@zoryna.com" class="inline-block bg-white text-black px-10 py-4 text-sm uppercase tracking-widest hover:bg-gold hover:text-white transition-all duration-300">
+                Запази Час
+            </a>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="bg-white pt-20 pb-10 border-t border-gray-100">
+        <div class="max-w-7xl mx-auto px-6">
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-12 mb-16">
+                <!-- Brand -->
+                <div class="col-span-1 md:col-span-1">
+                    <h3 class="text-2xl font-serif tracking-widest mb-6">ZORYNA</h3>
+                    <p class="text-gray-500 text-sm leading-relaxed mb-6">
+                        Изкуството на модерната елегантност. Създадено със страст в София, България.
+                    </p>
+                    <div class="flex space-x-4">
+                        <a href="#" class="text-black hover:text-gold transition-colors"><i data-lucide="instagram" class="w-5 h-5"></i></a>
+                        <a href="#" class="text-black hover:text-gold transition-colors"><i data-lucide="facebook" class="w-5 h-5"></i></a>
+                        <a href="#" class="text-black hover:text-gold transition-colors"><i data-lucide="twitter" class="w-5 h-5"></i></a>
+                    </div>
+                </div>
+
+                <!-- Links -->
+                <div>
+                    <h4 class="text-xs font-bold uppercase tracking-widest mb-6">Магазин</h4>
+                    <ul class="space-y-4 text-sm text-gray-500">
+                        <li><a href="#" class="hover:text-gold transition-colors">Нови Постъпления</a></li>
+                        <li><a href="#" class="hover:text-gold transition-colors">Рокли</a></li>
+                        <li><a href="#" class="hover:text-gold transition-colors">Аксесоари</a></li>
+                        <li><a href="#" class="hover:text-gold transition-colors">Подаръчни Карти</a></li>
+                    </ul>
+                </div>
+
+                <!-- Links -->
+                <div>
+                    <h4 class="text-xs font-bold uppercase tracking-widest mb-6">Информация</h4>
+                    <ul class="space-y-4 text-sm text-gray-500">
+                        <li><a href="#" class="hover:text-gold transition-colors">За Нас</a></li>
+                        <li><a href="#" class="hover:text-gold transition-colors">Кариера</a></li>
+                        <li><a href="#" class="hover:text-gold transition-colors">Доставка и Връщане</a></li>
+                        <li><a href="#" class="hover:text-gold transition-colors">Privacy Policy</a></li>
+                    </ul>
+                </div>
+
+                <!-- Newsletter -->
+                <div>
+                    <h4 class="text-xs font-bold uppercase tracking-widest mb-6">Бюлетин</h4>
+                    <p class="text-gray-500 text-sm mb-4">Абонирайте се за ексклузивни оферти и първи поглед към новите колекции.</p>
+                    <form onsubmit="event.preventDefault(); alert('Благодарим за абонамента!');" class="flex border-b border-black pb-2">
+                        <input type="email" placeholder="Вашият имейл" class="w-full bg-transparent outline-none text-sm placeholder-gray-400" required>
+                        <button type="submit" class="text-xs uppercase tracking-widest hover:text-gold transition-colors">Изпрати</button>
+                    </form>
+                </div>
+            </div>
+
+            <div class="border-t border-gray-100 pt-8 flex flex-col md:flex-row justify-between items-center text-xs text-gray-400 uppercase tracking-widest">
+                <p> ZORYNA FASHION. Всички права запазени.</p>
+                <div class="mt-4 md:mt-0 flex space-x-6">
+                    <span>България</span>
+                    <span>BG</span>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Initialize Lucide Icons
+        lucide.createIcons();
+
+        // Loader
+        window.addEventListener('load', () => {
+            const loader = document.getElementById('loader');
+            setTimeout(() => {
+                loader.style.opacity = '0';
+                setTimeout(() => {
+                    loader.style.display = 'none';
+                }, 800);
+            }, 1000);
+        });
+
+        // Navbar Scroll Effect
+        const navbar = document.getElementById('navbar');
+        window.addEventListener('scroll', () => {
+            if (window.scrollY > 50) {
+                navbar.classList.add('shadow-sm');
+                navbar.classList.replace('py-6', 'py-4');
+            } else {
+                navbar.classList.remove('shadow-sm');
+                navbar.classList.replace('py-4', 'py-6');
+            }
+        });
+
+        // Mobile Menu
+        function toggleMobileMenu() {
+            const menu = document.getElementById('mobile-menu');
+            if (menu.classList.contains('-translate-x-full')) {
+                menu.classList.remove('-translate-x-full');
+            } else {
+                menu.classList.add('-translate-x-full');
+            }
+        }
+
+        // Hero Slider Logic
+        let currentSlide = 0;
+        const slides = document.querySelectorAll('.slide');
+        const indicators = document.querySelectorAll('.slide-indicator');
+        let slideInterval;
+
+        function changeSlide(index) {
+            // Reset interval
+            clearInterval(slideInterval);
+            
+            // Remove active class from current
+            slides[currentSlide].classList.remove('active');
+            indicators[currentSlide].classList.replace('bg-black', 'bg-gray-400');
+            indicators[currentSlide].classList.replace('opacity-100', 'opacity-50');
+
+            // Set new index
+            currentSlide = index;
+            if (currentSlide >= slides.length) currentSlide = 0;
+            if (currentSlide < 0) currentSlide = slides.length - 1;
+
+            // Add active class to new
+            slides[currentSlide].classList.add('active');
+            indicators[currentSlide].classList.replace('bg-gray-400', 'bg-black');
+            indicators[currentSlide].classList.replace('opacity-50', 'opacity-100');
+
+            startSlideTimer();
+        }
+
+        function startSlideTimer() {
+            slideInterval = setInterval(() => {
+                changeSlide(currentSlide + 1);
+            }, 5000);
+        }
+
+        startSlideTimer();
+
+        // GSAP Scroll Animations
+        gsap.registerPlugin(ScrollTrigger);
+
+        // Animate Collection Items
+        gsap.utils.toArray('.product-card').forEach((card, i) => {
+            gsap.from(card, {
+                scrollTrigger: {
+                    trigger: card,
+                    start: "top 85%",
+                },
+                y: 50,
+                opacity: 0,
+                duration: 0.8,
+                delay: i * 0.1,
+                ease: "power3.out"
+            });
+        });
+
+        // Animate About Section
+        gsap.from("#atelier img", {
+            scrollTrigger: {
+                trigger: "#atelier",
+                start: "top 70%",
+            },
+            scale: 1.1,
+            opacity: 0,
+            duration: 1.2,
+            ease: "power2.out"
+        });
+
+        gsap.from("#atelier .max-w-lg", {
+            scrollTrigger: {
+                trigger: "#atelier",
+                start: "top 70%",
+            },
+            x: 50,
+            opacity: 0,
+            duration: 1,
+            delay: 0.3,
+            ease: "power2.out"
+        });
+
+        // Custom CSS Animation for Hero Text
+        const style = document.createElement('style');
+        style.innerHTML = `
+            @keyframes fadeInUp {
+                from {
+                    opacity: 0;
+                    transform: translate3d(0, 40px, 0);
+                }
+                to {
+                    opacity: 1;
+                    transform: translate3d(0, 0, 0);
+                }
+            }
+            .animate-fade-in-up {
+                animation-name: fadeInUp;
+                animation-duration: 1s;
+                animation-fill-mode: both;
+            }
+        `;
+        document.head.appendChild(style);
+
+    </script>
+</body>
+</html>
